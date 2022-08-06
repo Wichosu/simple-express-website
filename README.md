@@ -1,3 +1,3 @@
-# simple-express-website
+# Simple local library website
 
-Not quite yet with express
+This project is based and follows the tutorial from MDN web docs on how to use express by building a very simple local library website
