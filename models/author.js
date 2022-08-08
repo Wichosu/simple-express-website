@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var schema = mongoose.Schema;
+var Schema = mongoose.Schema;
 
 var AuthorSchema = new Schema(
   {
