@@ -13,7 +13,14 @@ genreSchema
 .virtual('url')
 .get(function () {
   return '/catalog/genre/' + this._id;
-})
+});
+
+//Virtual for genreSchema's name
+/*genreSchema
+.virtual('name')
+.get(function () {
+  return this.name;
+});*/
 
 //Export model
 
