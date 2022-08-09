@@ -15,13 +15,5 @@ genreSchema
   return '/catalog/genre/' + this._id;
 });
 
-//Virtual for genreSchema's name
-/*genreSchema
-.virtual('name')
-.get(function () {
-  return this.name;
-});*/
-
 //Export model
-
 module.exports = mongoose.model('genreInstance', genreSchema);
