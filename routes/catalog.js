@@ -112,7 +112,7 @@ router.post('/bookinstance/:id/update', book_instance_controller.bookinstance_up
 // GET request for one BookInstance.
 router.get('/bookinstance/:id', book_instance_controller.bookinstance_detail);
 
-// POST request for list of all BookInstance.
-router.post('/bookinstances', book_instance_controller.bookinstance_list);
+// GET request for list of all BookInstance.
+router.get('/bookinstances', book_instance_controller.bookinstance_list);
 
 module.exports = router;
