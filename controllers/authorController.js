@@ -164,7 +164,7 @@ exports.author_delete_post = function(req, res) {
         return next(err);
       }
       //Success
-      if (results.author_books.length > 0) {
+      if (results.authors_books.length > 0) {
         //Author has books. Render in same way as for GET route.
         res.render("author_delete", {
           title: "Delete Author",
