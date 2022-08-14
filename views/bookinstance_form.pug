@@ -25,7 +25,11 @@ block content
       input#imprint.form-control(type='text' placeholder='Name of imprint' name='imprint' required='true' value=(undefined===bookinstance? '' : bookinstance.imprint))
     div.form-group
       label(for='status') Status: 
-      input#status.form-control(type='text' placeholder='Name of status' name='status' required='true' value=(undefined===bookinstance? '' : bookinstance.status))
+      select#status.form-control(type='select' placeholder='Name of status' name='status' required='true')
+        option(value='Available') Available
+        option(value='Maintenance') Maintenance
+        option(value='Loaned') Loaned
+        option(value='Reserved') Reserved 
     div.form-group
       label(for='due_back') Due back: 
       input#due_back.form-control(type='date' name='due_back' value=(undefined===bookinstance? '' : bookinstance.due_back))
