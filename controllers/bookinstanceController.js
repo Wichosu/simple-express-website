@@ -59,9 +59,70 @@ exports.bookinstance_create_get = function(req, res, next) {
 };
 
 //Display BookInstance create on POST
-exports.bookinstance_create_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: BookInstance create POST');
-};
+exports.bookinstance_create_post = [
+  //Validate and sanitize field
+  body('book', 'Book must not be empty.')
+    .escape(),
+  body('imprint', 'Imprint must not be empty.')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body('status',' Status must not be empty.')
+    .trim()
+    .isLength({ min: 1})
+    .escape(),
+  body('due_back', 'Due back must not be empty.')
+    .optional({ checkFalsy: true }).isISO8601().toDate(),
+  
+  //Proccess request after sanitization and validation
+  (req, res, next) => {
+    //Extract the validation errors from a request
+    const errors = validationResult(req);
+
+    //Create BookInstance object with escaped and trim data (sanitized)
+    const bookinstance = new BookInstance({
+      book: req.body.book,
+      imprint: req.body.imprint,
+      status: req.body.status,
+      due_back: req.body.due_back,
+    })
+
+    if(!errors.isEmpty()) {
+      //There are errors. Render form again with sanitized values/error messages
+
+      //Get all books from form
+      async.parallel(
+        {
+          books(callback) {
+            Book.find(callback);
+          },
+        },
+        (err, results) => {
+          if (err) {
+            return next(err);
+          }
+
+          res.render('bookinstance_form', {
+            title: 'Create Book Instance',
+            books: results.books,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    }
+
+    //Data from form is valid. Save BookInstance
+    bookinstance.save((err) => {
+      if (err) {
+        return next(err);
+      }
+
+      //Successful, redirect to new book instance.
+      res.redirect(bookinstance.url);
+    });
+  },
+];
 
 //Display BookInstance delete form on GET
 exports.bookinstance_delete_get = function(req, res) {
