@@ -20,3 +20,17 @@ block content
             ) #{book.title}
           else 
            option(value=book._id) #{book.title}
+    div.form-group
+      label(for='imprint') Imprint: 
+      input#imprint.form-control(type='text' placeholder='Name of imprint' name='imprint' required='true' value=(undefined===bookinstance? '' : bookinstance.imprint))
+    div.form-group
+      label(for='status') Status: 
+      input#status.form-control(type='text' placeholder='Name of status' name='status' required='true' value=(undefined===bookinstance? '' : bookinstance.status))
+    div.form-group
+      label(for='due_back') Due back: 
+      input#due_back.form-control(type='date' name='due_back' value=(undefined===bookinstance? '' : bookinstance.due_back))
+    button.btn.btn-primary(type='submit') Submit
+  if errors
+    ul 
+      for error in errors 
+        li!=error.msg
