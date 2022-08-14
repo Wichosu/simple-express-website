@@ -213,7 +213,7 @@ exports.book_delete_get = function(req, res, next) {
       if (err) {
         return next(err);
       }
-      if (results.author == null) {
+      if (results.book == null) {
         //No results.
         res.redirect('/catalog/books');
       }
