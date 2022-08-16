@@ -136,7 +136,7 @@ exports.bookinstance_delete_get = function(req, res, next) {
       if (err) {
         return next(err);
       }
-      if (results == null) {
+      if (results.instance == null) {
         //No results.
         res.redirect('/catalog/bookinstances');
       }
