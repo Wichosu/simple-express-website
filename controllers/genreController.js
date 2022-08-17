@@ -138,7 +138,7 @@ exports.genre_delete_post = function(req, res, next) {
         Genre.findById(req.body.genreid).exec(callback);
       },
       books(callback) {
-        Book.findById({ genre: req.body.genreid }).exec(callback);
+        Book.find({ genre: req.body.genreid }).exec(callback);
       },
     },
     (err, results) => {
