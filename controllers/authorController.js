@@ -214,6 +214,58 @@ exports.author_update_get = function(req, res, next) {
 };
 
 //Handle Author update on POST
-exports.author_update_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Author update POST');
-};
+exports.author_update_post = [
+  //Validate and Sanitize fields
+  body('first_name', 'First name must not be empty')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body('family_name', 'Family name must not be empty')
+    .trim()
+    .isLength({ min: 1})
+    .escape(),
+  body('date_of_birth')
+    .optional({ checkFalsy: true }).isISO8601().toDate(),
+  body('date_of_death')
+    .optional({ checkFalsy: true }).isISO8601().toDate(),
+  
+  //Process request after sanitization and validation.
+  (req, res, next) => {
+    //Extract validation errors.
+    const errors = validation(req);
+
+    //Create an Author object with sanitized data and old id
+    const author = new Author({
+      first_name: req.body.first_name,
+      family_name: req.body.family_name,
+      date_of_birth: req.body.date_of_birth,
+      date_of_death: req.body.date_of_death,
+      _id: req.params.id //Required so no new id is created.
+    });
+
+    if (!errors.isEmpty()) {
+      //There are errors. Return render again.
+      (err, results) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.render('author_update', {
+          title: 'Update Author',
+          author: results.author,
+        });
+      }
+      return;
+    }
+
+    //Data form is valid.Update the record
+    Author.findByIdAndUpdate(req.params.id, author, {}, (err, theauthor) => {
+      if (err) {
+        return next(err);
+      }
+
+      //Successful. So redirect to author detail
+      res.redirect(theauthor.url);
+    });
+  }
+];
