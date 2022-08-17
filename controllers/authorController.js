@@ -205,7 +205,7 @@ exports.author_update_get = function(req, res, next) {
         return next(error);
       }
       //Success. so render
-      res.render('author_update', {
+      res.render('author_form', {
         title: 'Update Author',
         author: results.author,
       });
@@ -232,7 +232,7 @@ exports.author_update_post = [
   //Process request after sanitization and validation.
   (req, res, next) => {
     //Extract validation errors.
-    const errors = validation(req);
+    const errors = validationResult(req);
 
     //Create an Author object with sanitized data and old id
     const author = new Author({
@@ -250,7 +250,7 @@ exports.author_update_post = [
           return next(err);
         }
 
-        res.render('author_update', {
+        res.render('author_form', {
           title: 'Update Author',
           author: results.author,
         });
