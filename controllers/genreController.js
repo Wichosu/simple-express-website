@@ -102,7 +102,7 @@ exports.genre_create_post = [
 
 //Display Genre delete form on GET
 exports.genre_delete_get = function(req, res, next) {
-  async(
+  async.parallel(
     {
       genre(callback) {
         Genre.findById(req.params.id).exec(callback);
@@ -132,7 +132,7 @@ exports.genre_delete_get = function(req, res, next) {
 
 //Display Genre delete on POST
 exports.genre_delete_post = function(req, res, next) {
-  async(
+  async.parallel(
     {
       genre(callback) {
         Genre.findById(req.body.genreid).exec(callback);
