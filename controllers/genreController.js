@@ -196,6 +196,42 @@ exports.genre_update_get = function(req, res, next) {
 };
 
 //Display Genre update on POST
-exports.genre_update_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Genre update POST');
-};
+exports.genre_update_post = [
+  //Sanitize and validate fiels
+  body('name', 'Name must not be empty')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  
+  //Proccess request after sanitization and validation
+  (req, res, next) => {
+    //Extract errors from validation
+    const errors = validationResult(req);
+
+    //Create a Genre object.
+    const genre = new Genre({
+      name: req.body.name,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      //There are errors. render again
+      res.render('genre_update', {
+        title: 'Update Genre',
+        genre,
+        errors: errors.array(),
+      });
+      return;
+    }
+
+    //Data is valid. Update record.
+    Genre.findByIdAndUpdate(req.params.id, genre, {}, (err, thegenre) => {
+      if (err) {
+        return next(err);
+      }
+
+      //redirect to genre detail
+      res.redirect(thegenre.url);
+    });
+  }
+];
