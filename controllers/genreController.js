@@ -2,6 +2,7 @@ var Genre = require('../models/genre');
 var Book = require('../models/book');
 var async = require('async');
 const { body, validationResult } = require("express-validator");
+const genre = require('../models/genre');
 
 //Display list of all GENRE
 exports.genre_list = function(req, res, next) {
@@ -103,11 +104,11 @@ exports.genre_create_post = [
 exports.genre_delete_get = function(req, res, next) {
   async(
     {
-      genres(callback) {
+      genre(callback) {
         Genre.findById(req.params.id).exec(callback);
       },
       books(callback) {
-        Book.find({ genre: req.params.id}).exec(callback);
+        Book.find({ genre: req.params.id }).exec(callback);
       },
     },
     (err, results) => {
@@ -115,7 +116,7 @@ exports.genre_delete_get = function(req, res, next) {
         return next(err);
       }
       //Success
-      if (results.genres == null) {
+      if (results.genre == null) {
         //No results. return to catalog/genres
         res.redirect('/catalog/genres');
       }
@@ -123,15 +124,47 @@ exports.genre_delete_get = function(req, res, next) {
       res.render('genre_delete', {
         title: 'Delete Genre',
         books: results.books,
-        genres: results.genres,
+        genre: results.genre,
       });
     }
   );
 };
 
 //Display Genre delete on POST
-exports.genre_delete_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Genre delete POST');
+exports.genre_delete_post = function(req, res, next) {
+  async(
+    {
+      genre(callback) {
+        Genre.findById(req.body.genreid).exec(callback);
+      },
+      books(callback) {
+        Book.findById({ genre: req.body.genreid }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      //Success.check for existing books with the genre.
+      if(results.books.length > 0) {
+        res.render('book_delete', {
+          title: 'Delete Genre',
+          books: results.books,
+          genre: results.genre,
+        });
+      }
+
+      //Genre has no books. Delete object and redirec to list of genres.
+      Genre.findByIdAndRemove(req.body.genreid, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        //Success. go to list of genres
+        res.redirect('/catalog/genres');
+      });
+    }
+  );
 };
 
 //Display Genre update on GET

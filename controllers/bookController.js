@@ -262,7 +262,7 @@ exports.book_delete_post = function(req, res, next) {
 
         //Success. go to book list
         res.redirect('/catalog/books');
-      })
+      });
     }
   );
 };
