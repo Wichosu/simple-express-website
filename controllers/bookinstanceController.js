@@ -183,7 +183,7 @@ exports.bookinstance_update_get = function(req, res, next) {
           .populate('book')
           .exec(callback)
       },
-      book(callback) {
+      books(callback) {
         Book.find(callback);
       },
     },
@@ -203,7 +203,7 @@ exports.bookinstance_update_get = function(req, res, next) {
       res.render('bookinstance_form', {
         title: 'Update Book Instance',
         bookinstance: results.bookinstance,
-        book: results.book,
+        books: results.books,
       });
     }
   );
@@ -236,13 +236,14 @@ exports.bookinstance_update_post = [
       imprint: req.body.imprint,
       status: req.body.status,
       due_back: req.body.due_back,
+      _id: req.params.id,
     });
 
     if (!errors.isEmpty()) {
       //There are errors. Send message and render form again.
       async.parallel(
         {
-          book(callback) {
+          books(callback) {
             Book.find(callback);
           },
         },
@@ -253,7 +254,7 @@ exports.bookinstance_update_post = [
 
           res.render('bookinstance_form', {
             title: 'Update Book Instance',
-            book: results.book,
+            books: results.books,
             errors: errors.array(),
           });
         }
