@@ -168,8 +168,31 @@ exports.genre_delete_post = function(req, res, next) {
 };
 
 //Display Genre update on GET
-exports.genre_update_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Genre update GET');
+exports.genre_update_get = function(req, res, next) {
+  async.parallel(
+    {
+      genre(callback) {
+        Genre.findById(req.params.id).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+
+      //check if genre exists
+      if(results.genre == null) {
+        const error = new Error('Genre does not exist');
+        error.status = 404;
+        return next(error);
+      }
+
+      res.render('genre_form', {
+        title: 'Update Genre',
+        genre: results.genre,
+      });
+    }
+  );
 };
 
 //Display Genre update on POST
